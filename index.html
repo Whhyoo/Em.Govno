@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Petrik: The Sirot Edition</title>
+    
+    <!-- ИКОНКА САЙТА (FAVICON) -->
+    <link rel="icon" href="jar.png" type="image/png">
+
     <style>
         /* --- БАЗОВЫЕ СТИЛИ --- */
         body {
             margin: 0;
             min-height: 100vh; /* Растягиваем на весь экран */
-            background: linear-gradient(to bottom, #151515, #050505); /* Градиент */
-            background-attachment: fixed;
+            background: linear-gradient(to bottom, #151515, #050505); /* Монотонный градиент */
+            background-attachment: fixed; /* Фон зафиксирован */
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             overflow-x: hidden; 
@@ -22,7 +26,7 @@
             height: 70px;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Меню слева, остальное пусто */
+            justify-content: space-between;
             padding: 0 40px;
             font-size: 14px;
             font-weight: 500;
@@ -41,7 +45,10 @@
             transition: color 0.3s;
         }
 
-        /* .header-right и .logo удалены из стилей, так как они пусты/удалены в HTML */
+        /* Правая часть хедера пустая, как и просили */
+        .header-right {
+            display: flex;
+        }
 
         /* --- БОКОВОЕ МЕНЮ (SIDEBAR) --- */
         .sidebar-overlay {
@@ -147,8 +154,6 @@
             padding: 60px 0 40px;
         }
         
-        /* h2 (Rolex Watches) удален */
-
         .hero h1 {
             font-size: 60px;
             font-family: 'Times New Roman', serif;
@@ -161,7 +166,7 @@
             justify-content: center;
             gap: 30px;
             padding-bottom: 20px;
-            /* border-bottom: 1px solid #333;  <-- ЛИНИЯ УБРАНА */
+            /* Линия снизу убрана */
             margin-bottom: 50px;
         }
         .models-nav span {
@@ -175,9 +180,7 @@
         .models-nav span:hover { color: #aaa; }
         .models-nav span.active { 
             color: #006039; 
-            /* Оставил подчеркивание только у активного слова (зеленое), 
-               если нужно убрать совсем - удали строку ниже */
-            border-bottom: 2px solid #006039; 
+            border-bottom: 2px solid #006039; /* Подчеркивание только у активного */
         }
 
         .grid-container {
@@ -310,32 +313,36 @@
 </head>
 <body>
 
+    <!-- ЗАТЕМНЕНИЕ ФОНА -->
     <div class="sidebar-overlay" id="overlay" onclick="closeMenu()"></div>
 
+    <!-- БОКОВОЕ МЕНЮ -->
     <div class="sidebar-menu" id="sidebar">
         <span class="close-btn" onclick="closeMenu()">&times;</span>
+        
         <div class="sidebar-title">Меню</div>
+        
         <a href="#" class="sidebar-link">О нас</a>
         <a href="#" class="sidebar-link">Доставка</a>
         <a href="#" class="sidebar-link">Контакты</a>
+
+        <!-- КНОПКА -->
         <button class="buy-struya-btn" onclick="alert('Функция покупки скоро будет доступна!')">
             Купить струю
         </button>
     </div>
 
     <header>
+        <!-- Клик открывает меню -->
         <div class="header-left" onclick="openMenu()">
             <span>☰ Menu</span>
         </div>
         
-        <!-- КОРОНА УДАЛЕНА -->
-        
-        <!-- ПРАВЫЕ ПУНКТЫ УДАЛЕНЫ -->
+        <!-- Пустой блок справа -->
         <div class="header-right"></div>
     </header>
 
     <section class="hero">
-        <!-- ROLEX WATCHES УДАЛЕНО -->
         <h1>All Sirots</h1>
     </section>
 
@@ -394,6 +401,7 @@
     </div>
 
     <script>
+        // --- ЛОГИКА БОКОВОГО МЕНЮ ---
         function openMenu() {
             document.getElementById('sidebar').classList.add('active');
             document.getElementById('overlay').classList.add('active');
@@ -404,6 +412,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
 
+        // --- ЛОГИКА СОХРАНЕНИЯ ЛАЙКОВ ---
         let savedData = localStorage.getItem('petrikFavorites');
         let likedItems = savedData ? JSON.parse(savedData) : [];
         let currentMode = 'all'; 
@@ -441,6 +450,7 @@
             localStorage.setItem('petrikFavorites', JSON.stringify(likedItems));
         }
 
+        // --- ЛОГИКА ФИЛЬТРАЦИИ ---
         function showAll(btn) {
             currentMode = 'all';
             updateNavStyles(btn);
