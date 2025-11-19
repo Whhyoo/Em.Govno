@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petrik: The Sirot Edition</title>
+    <style>
+        /* --- БАЗОВЫЕ СТИЛИ --- */
+        body {
+            margin: 0;
+            background-color: #151515;
+            color: white;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: #006039;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 100;
+            position: relative;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            gap: 30px;
+            cursor: pointer;
+        }
+
+        .logo {
+            font-size: 30px;
+            color: #a37e2c;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+
+        .hero h2 {
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 {
+            font-size: 60px;
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* --- НАВИГАЦИЯ --- */
+        .models-nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 50px;
+        }
+
+        .models-nav span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .models-nav span:hover {
+            color: #aaa;
+        }
+
+        .models-nav span.active {
+            color: #006039;
+            border-bottom: 2px solid #006039;
+        }
+
+        /* --- СЕТКА ТОВАРОВ --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 0 5vw;
+            max-width: 1600px;
+            margin: 0 auto 100px;
+            min-height: 400px;
+        }
+
+        /* --- ЛОГИКА БЛЮРА --- */
+        .card {
+            background-color: transparent;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: left;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        /* Если внутри сетки есть наведенная карточка, блюрим остальные */
+        .grid-container:has(.card:hover) .card {
+            filter: blur(5px) brightness(0.5);
+            transform: scale(0.95);
+        }
+
+        /* Сама активная карточка */
+        .card:hover {
+            filter: blur(0) brightness(1) !important;
+            transform: scale(1.1) !important;
+            z-index: 10;
+        }
+
+        /* --- СЕРДЕЧКО --- */
+        .heart-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: white;
+            -webkit-text-stroke: 1px #006039;
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+
+        .heart-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .heart-icon.liked {
+            color: #006039;
+            -webkit-text-stroke: 0;
+        }
+
+        .img-wrapper {
+            height: 350px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform 0.6s ease;
+        }
+
+        /* --- ОПИСАНИЕ БАНКИ (Всплывающее) --- */
+        .hidden-desc {
+            position: absolute;
+            top: 30%;
+            width: 180px;
+            background-color: rgba(255, 255, 255, 0.95);
+            color: black;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s ease 0.1s;
+            pointer-events: none;
+        }
+
+        .card:nth-child(odd) .hidden-desc { left: 85%; }
+        .card:nth-child(even) .hidden-desc { right: 85%; left: auto; }
+
+        .card:hover .hidden-desc {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* --- ТЕКСТЫ КАРТОЧКИ --- */
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            width: 100%;
+        }
+
+        .card-price {
+            font-size: 14px;
+            font-weight: bold;
+            width: 100%;
+            color: #fff;
+            display: flex; /* Чтобы выровнять иконку */
+            align-items: center;
+            gap: 5px;
+        }
+
+        .new-tag {
+            margin-top: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            width: 100%;
+        }
+
+        #empty-msg {
+            display: none;
+            text-align: center;
+            width: 100%;
+            font-size: 24px;
+            color: #555;
+            grid-column: 1 / -1;
+        }
+
+        /* --- ИНФО ИКОНКА (i) --- */
+        .info-icon {
+            cursor: help;
+            position: relative; /* Чтобы подсказка позиционировалась относительно иконки */
+            font-size: 16px;
+        }
+
+        /* --- ПОДСКАЗКА ДЛЯ ВАЛЮТЫ --- */
+        .currency-tooltip {
+            position: absolute;
+            bottom: 140%; /* Появляется над иконкой */
+            left: 50%;
+            transform: translateX(-50%); /* Центрирование */
+            width: 200px;
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: normal;
+            line-height: 1.4;
+            border: 1px solid #444;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            
+            /* Скрыто по умолчанию */
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100; /* Поверх всего */
+        }
+
+        /* Стрелочка вниз у подсказки */
+        .currency-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #222 transparent transparent transparent;
+        }
+
+        /* Показываем при наведении на иконку */
+        .info-icon:hover .currency-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span>☰ Menu</span>
+        </div>
+        <div class="logo">♛</div>
+        <div class="header-right">
+            <span>🔍 Search</span>
+            <span>📍 Store locator</span>
+            <span>♡ Favorites</span>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h2>ROLEX WATCHES</h2>
+        <h1>All Sirots</h1>
+    </section>
+
+    <nav class="models-nav">
+        <span class="active" onclick="showAll(this)">All</span>
+        <span>1 man 12 cucumber</span>
+        <span onclick="showFavorites(this)">Gay Edition (Favorites)</span>
+        <span>Classic Eblan</span>
+        <span>Deep Anal</span>
+    </nav>
+
+    <div class="grid-container" id="productsGrid">
+
+        <div id="empty-msg">В Gay Edition пока пусто... <br>Лайкни банку!</div>
+
+        <!-- ТОВАР 1 -->
+        <div class="card" id="card1">
+            <div class="heart-icon" onclick="toggleLike(this, 'card1')">♡</div>
+            <div class="img-wrapper">
+                <img src="jar.png" alt="Банка">
+            </div>
+            <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
+            <div class="card-title">1 man 12 cucumber</div>
+            <div class="card-desc">Oyster, 40 mm, Oystersteel and fresh cucumbers</div>
+            
+            <!-- ЦЕНА + ПОДСКАЗКА -->
+            <div class="card-price">
+                2 строи мочи 
+                <span class="info-icon">ⓘ
+                    <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
+                </span>
+            </div>
+            
+            <div class="new-tag">New model</div>
+        </div>
+
+        <!-- ТОВАР 2 -->
+        <div class="card" id="card2">
+            <div class="heart-icon" onclick="toggleLike(this, 'card2')">♡</div>
+            <div class="img-wrapper">
+                <img src="jar.png" alt="Банка">
+            </div>
+            <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
+            <div class="card-title">1 gay 12 cucumber</div>
+            <div class="card-desc">Oyster, 40 mm, Everose gold Secret ingredient</div>
+            
+            <div class="card-price">
+                7 строев мочи 
+                <span class="info-icon">ⓘ
+                    <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- ТОВАР 3 -->
+        <div class="card" id="card3">
+            <div class="heart-icon" onclick="toggleLike(this, 'card3')">♡</div>
+            <div class="img-wrapper">
+                <img src="jar.png" alt="Банка">
+            </div>
+            <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
+            <div class="card-title">По приколу еблана вставили</div>
+            <div class="card-desc">Oyster, 42 mm, Oystersteel Limited edition</div>
+            
+            <div class="card-price">
+                1 строя мочи 
+                <span class="info-icon">ⓘ
+                    <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
+                </span>
+            </div>
+            
+            <div class="new-tag">New model</div>
+        </div>
+        
+        <!-- ТОВАР 4 -->
+        <div class="card" id="card4">
+            <div class="heart-icon" onclick="toggleLike(this, 'card4')">♡</div>
+            <div class="img-wrapper">
+                <img src="jar.png" alt="Банка">
+            </div>
+            <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
+            <div class="card-title">37 см в очке</div>
+            <div class="card-desc">Oyster, 41 mm, Painsteel Waterproof jar</div>
+            
+            <div class="card-price">
+                5 строев мочи 
+                <span class="info-icon">ⓘ
+                    <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let likedItems = [];
+        let currentMode = 'all'; 
+
+        function toggleLike(heartElement, cardId) {
+            event.stopPropagation();
+            const index = likedItems.indexOf(cardId);
+
+            if (index === -1) {
+                likedItems.push(cardId);
+                heartElement.classList.add('liked');
+                heartElement.innerHTML = '♥';
+            } else {
+                likedItems.splice(index, 1);
+                heartElement.classList.remove('liked');
+                heartElement.innerHTML = '♡';
+                
+                if (currentMode === 'favorites') {
+                    document.getElementById(cardId).style.display = 'none';
+                    checkEmpty();
+                }
+            }
+        }
+
+        function showAll(btn) {
+            currentMode = 'all';
+            updateNavStyles(btn);
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.display = 'flex';
+            });
+            document.getElementById('empty-msg').style.display = 'none';
+        }
+
+        function showFavorites(btn) {
+            currentMode = 'favorites';
+            updateNavStyles(btn);
+
+            const cards = document.querySelectorAll('.card');
+            let hasVisibleItems = false;
+
+            cards.forEach(card => {
+                if (likedItems.includes(card.id)) {
+                    card.style.display = 'flex';
+                    hasVisibleItems = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (!hasVisibleItems) {
+                document.getElementById('empty-msg').style.display = 'block';
+            } else {
+                document.getElementById('empty-msg').style.display = 'none';
+            }
+        }
+
+        function checkEmpty() {
+            if (likedItems.length === 0) {
+                document.getElementById('empty-msg').style.display = 'block';
+            }
+        }
+
+        function updateNavStyles(activeBtn) {
+            const navItems = document.querySelectorAll('.models-nav span');
+            navItems.forEach(span => span.classList.remove('active'));
+            activeBtn.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
