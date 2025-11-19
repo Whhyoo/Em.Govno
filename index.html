@@ -11,7 +11,7 @@
             background-color: #151515;
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Важно, чтобы меню не создавало горизонтальный скролл */
         }
 
         /* --- ХЕДЕР --- */
@@ -34,9 +34,8 @@
             cursor: pointer;
         }
         
-        /* Эффект наведения на Меню */
         .header-left span:hover {
-            color: #006039; /* Зеленый при наведении */
+            color: #006039;
             transition: color 0.3s;
         }
 
@@ -45,86 +44,120 @@
             color: #a37e2c;
         }
 
-        /* --- МОДАЛЬНОЕ ОКНО (МЕНЮ) --- */
-        .modal-overlay {
-            display: none; /* Скрыто по умолчанию */
+        /* --- БОКОВОЕ МЕНЮ (SIDEBAR) --- */
+        
+        /* Фон-затемнение (подложка) */
+        .sidebar-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85); /* Темный фон сзади */
-            z-index: 2000; /* Поверх всего */
-            justify-content: center;
-            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный черный */
+            z-index: 1999; /* Чуть ниже самого меню */
             opacity: 0;
-            transition: opacity 0.3s ease;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
 
-        /* Когда окно открыто */
-        .modal-overlay.active {
-            display: flex;
+        .sidebar-overlay.active {
             opacity: 1;
+            visibility: visible;
         }
 
-        .modal-window {
-            background-color: #1a1a1a;
-            border: 2px solid #006039; /* Зеленая рамка */
-            padding: 40px;
-            width: 300px;
-            text-align: center;
-            border-radius: 10px;
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 96, 57, 0.3);
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
+        /* Сама панель меню */
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px; /* Ширина меню (узкое) */
+            height: 100%;
+            background-color: #1a1a1a; /* Темно-серый фон меню */
+            border-right: 2px solid #006039; /* Зеленая линия справа */
+            z-index: 2000; /* Самый верхний слой */
+            padding: 30px;
+            box-sizing: border-box;
+            
+            /* Скрываем за левой границей экрана */
+            transform: translateX(-100%); 
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Плавная анимация */
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
         }
 
-        .modal-overlay.active .modal-window {
-            transform: scale(1);
+        /* Класс для открытия меню */
+        .sidebar-menu.active {
+            transform: translateX(0); /* Возвращаем на экран */
         }
 
         /* Кнопка закрытия (крестик) */
         .close-btn {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            color: #aaa;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: #888;
             cursor: pointer;
             line-height: 1;
+            transition: color 0.3s;
         }
         .close-btn:hover {
             color: white;
         }
 
+        /* Заголовок внутри меню */
+        .sidebar-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            margin-top: 10px;
+            color: #ccc;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+        }
+
         /* Кнопка "Купить струю" */
         .buy-struya-btn {
-            display: inline-block;
+            display: block;
+            width: 100%;
             background-color: #006039;
             color: white;
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 15px 0;
+            font-size: 16px;
             font-weight: bold;
             text-transform: uppercase;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
             transition: background 0.3s, transform 0.2s;
+            margin-top: 20px;
         }
 
         .buy-struya-btn:hover {
             background-color: #004d2e;
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
-        /* --- ОСТАЛЬНЫЕ СТИЛИ (Hero, Grid, Cards) --- */
+        /* Дополнительные ссылки в меню (для красоты) */
+        .sidebar-link {
+            display: block;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+            transition: color 0.3s;
+        }
+        .sidebar-link:hover {
+            color: #006039;
+            padding-left: 10px; /* Небольшой сдвиг при наведении */
+        }
+
+
+        /* --- ОСТАЛЬНЫЕ СТИЛИ (Без изменений) --- */
         .hero {
             text-align: center;
             padding: 60px 0 40px;
         }
-
         .hero h2 {
             font-size: 14px;
             letter-spacing: 2px;
@@ -132,14 +165,12 @@
             color: #ccc;
             margin-bottom: 10px;
         }
-
         .hero h1 {
             font-size: 60px;
             font-family: 'Times New Roman', serif;
             margin: 0;
             font-weight: bold;
         }
-
         .models-nav {
             display: flex;
             justify-content: center;
@@ -148,7 +179,6 @@
             border-bottom: 1px solid #333;
             margin-bottom: 50px;
         }
-
         .models-nav span {
             font-size: 14px;
             font-weight: bold;
@@ -157,16 +187,8 @@
             cursor: pointer;
             transition: color 0.3s;
         }
-
-        .models-nav span:hover {
-            color: #aaa;
-        }
-
-        .models-nav span.active {
-            color: #006039;
-            border-bottom: 2px solid #006039;
-        }
-
+        .models-nav span:hover { color: #aaa; }
+        .models-nav span.active { color: #006039; border-bottom: 2px solid #006039; }
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -176,7 +198,6 @@
             margin: 0 auto 100px;
             min-height: 400px;
         }
-
         .card {
             background-color: transparent;
             padding: 20px;
@@ -188,18 +209,15 @@
             cursor: pointer;
             transition: all 0.5s ease;
         }
-
         .grid-container:has(.card:hover) .card {
             filter: blur(5px) brightness(0.5);
             transform: scale(0.95);
         }
-
         .card:hover {
             filter: blur(0) brightness(1) !important;
             transform: scale(1.1) !important;
             z-index: 10;
         }
-
         .heart-icon {
             position: absolute;
             top: 20px;
@@ -211,16 +229,8 @@
             z-index: 20;
             transition: all 0.3s ease;
         }
-
-        .heart-icon:hover {
-            transform: scale(1.2);
-        }
-
-        .heart-icon.liked {
-            color: #006039;
-            -webkit-text-stroke: 0;
-        }
-
+        .heart-icon:hover { transform: scale(1.2); }
+        .heart-icon.liked { color: #006039; -webkit-text-stroke: 0; }
         .img-wrapper {
             height: 350px;
             width: 100%;
@@ -229,14 +239,12 @@
             align-items: center;
             margin-bottom: 20px;
         }
-
         .card img {
             max-height: 100%;
             max-width: 100%;
             object-fit: contain;
             transition: transform 0.6s ease;
         }
-
         .hidden-desc {
             position: absolute;
             top: 30%;
@@ -254,64 +262,19 @@
             transition: all 0.4s ease 0.1s;
             pointer-events: none;
         }
-
         .card:nth-child(odd) .hidden-desc { left: 85%; }
         .card:nth-child(even) .hidden-desc { right: 85%; left: auto; }
-
         .card:hover .hidden-desc {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            width: 100%;
-        }
-
-        .card-desc {
-            font-size: 14px;
-            color: #aaa;
-            margin-bottom: 15px;
-            line-height: 1.4;
-            width: 100%;
-        }
-
-        .card-price {
-            font-size: 14px;
-            font-weight: bold;
-            width: 100%;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .new-tag {
-            margin-top: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #fff;
-            width: 100%;
-        }
-
-        #empty-msg {
-            display: none;
-            text-align: center;
-            width: 100%;
-            font-size: 24px;
-            color: #555;
-            grid-column: 1 / -1;
-        }
-
-        .info-icon {
-            cursor: help;
-            position: relative;
-            font-size: 16px;
-        }
-
+        .card-title { font-size: 18px; font-weight: bold; margin-bottom: 8px; width: 100%; }
+        .card-desc { font-size: 14px; color: #aaa; margin-bottom: 15px; line-height: 1.4; width: 100%; }
+        .card-price { font-size: 14px; font-weight: bold; width: 100%; color: #fff; display: flex; align-items: center; gap: 5px; }
+        .new-tag { margin-top: 20px; font-size: 12px; font-weight: bold; color: #fff; width: 100%; }
+        #empty-msg { display: none; text-align: center; width: 100%; font-size: 24px; color: #555; grid-column: 1 / -1; }
+        .info-icon { cursor: help; position: relative; font-size: 16px; }
         .currency-tooltip {
             position: absolute;
             bottom: 140%;
@@ -333,7 +296,6 @@
             transition: opacity 0.3s;
             z-index: 100;
         }
-
         .currency-tooltip::after {
             content: "";
             position: absolute;
@@ -344,30 +306,32 @@
             border-style: solid;
             border-color: #222 transparent transparent transparent;
         }
-
-        .info-icon:hover .currency-tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
+        .info-icon:hover .currency-tooltip { visibility: visible; opacity: 1; }
     </style>
 </head>
 <body>
 
-    <!-- ВСПЛЫВАЮЩЕЕ ОКНО (МЕНЮ) -->
-    <div class="modal-overlay" id="menuModal" onclick="closeMenu(event)">
-        <div class="modal-window">
-            <span class="close-btn" onclick="closeMenu(event)">&times;</span>
-            <h2 style="margin-bottom: 30px;">Эксклюзив</h2>
-            <!-- КНОПКА КУПИТЬ СТРУЮ -->
-            <button class="buy-struya-btn" onclick="alert('Функция покупки скоро будет доступна!')">
-                Купить струю
-            </button>
-        </div>
+    <!-- ЗАТЕМНЕНИЕ ФОНА -->
+    <div class="sidebar-overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <!-- БОКОВОЕ МЕНЮ -->
+    <div class="sidebar-menu" id="sidebar">
+        <span class="close-btn" onclick="closeMenu()">&times;</span>
+        
+        <div class="sidebar-title">Меню</div>
+        
+        <a href="#" class="sidebar-link">О нас</a>
+        <a href="#" class="sidebar-link">Доставка</a>
+        <a href="#" class="sidebar-link">Контакты</a>
+
+        <!-- КНОПКА -->
+        <button class="buy-struya-btn" onclick="alert('Функция покупки скоро будет доступна!')">
+            Купить струю
+        </button>
     </div>
 
     <header>
-        <!-- Добавили onclick="openMenu()" -->
+        <!-- Клик открывает меню -->
         <div class="header-left" onclick="openMenu()">
             <span>☰ Menu</span>
         </div>
@@ -439,19 +403,15 @@
     </div>
 
     <script>
-        // --- ФУНКЦИИ ДЛЯ МЕНЮ ---
+        // --- НОВАЯ ЛОГИКА ДЛЯ БОКОВОГО МЕНЮ ---
         function openMenu() {
-            const modal = document.getElementById('menuModal');
-            modal.classList.add('active');
+            document.getElementById('sidebar').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
         }
 
-        function closeMenu(event) {
-            // Закрываем, если кликнули по затемненному фону или по крестику
-            // Проверяем, чтобы клик был именно по фону (id="menuModal") или по крестику (class="close-btn")
-            if (event.target.id === 'menuModal' || event.target.classList.contains('close-btn')) {
-                const modal = document.getElementById('menuModal');
-                modal.classList.remove('active');
-            }
+        function closeMenu() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
         }
 
         // --- ЛОГИКА СОХРАНЕНИЯ ---
