@@ -14,6 +14,7 @@
             overflow-x: hidden;
         }
 
+        /* --- ХЕДЕР --- */
         header {
             background-color: transparent;
             height: 70px;
@@ -32,12 +33,93 @@
             gap: 30px;
             cursor: pointer;
         }
+        
+        /* Эффект наведения на Меню */
+        .header-left span:hover {
+            color: #006039; /* Зеленый при наведении */
+            transition: color 0.3s;
+        }
 
         .logo {
             font-size: 30px;
             color: #a37e2c;
         }
 
+        /* --- МОДАЛЬНОЕ ОКНО (МЕНЮ) --- */
+        .modal-overlay {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Темный фон сзади */
+            z-index: 2000; /* Поверх всего */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Когда окно открыто */
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-window {
+            background-color: #1a1a1a;
+            border: 2px solid #006039; /* Зеленая рамка */
+            padding: 40px;
+            width: 300px;
+            text-align: center;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 96, 57, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-window {
+            transform: scale(1);
+        }
+
+        /* Кнопка закрытия (крестик) */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .close-btn:hover {
+            color: white;
+        }
+
+        /* Кнопка "Купить струю" */
+        .buy-struya-btn {
+            display: inline-block;
+            background-color: #006039;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .buy-struya-btn:hover {
+            background-color: #004d2e;
+            transform: scale(1.05);
+        }
+
+        /* --- ОСТАЛЬНЫЕ СТИЛИ (Hero, Grid, Cards) --- */
         .hero {
             text-align: center;
             padding: 60px 0 40px;
@@ -58,7 +140,6 @@
             font-weight: bold;
         }
 
-        /* --- НАВИГАЦИЯ --- */
         .models-nav {
             display: flex;
             justify-content: center;
@@ -86,7 +167,6 @@
             border-bottom: 2px solid #006039;
         }
 
-        /* --- СЕТКА ТОВАРОВ --- */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -97,7 +177,6 @@
             min-height: 400px;
         }
 
-        /* --- ЛОГИКА БЛЮРА --- */
         .card {
             background-color: transparent;
             padding: 20px;
@@ -121,7 +200,6 @@
             z-index: 10;
         }
 
-        /* --- СЕРДЕЧКО --- */
         .heart-icon {
             position: absolute;
             top: 20px;
@@ -159,7 +237,6 @@
             transition: transform 0.6s ease;
         }
 
-        /* --- ОПИСАНИЕ БАНКИ --- */
         .hidden-desc {
             position: absolute;
             top: 30%;
@@ -187,7 +264,6 @@
             transform: translateY(0);
         }
 
-        /* --- ТЕКСТЫ --- */
         .card-title {
             font-size: 18px;
             font-weight: bold;
@@ -230,7 +306,6 @@
             grid-column: 1 / -1;
         }
 
-        /* --- ПОДСКАЗКА ВАЛЮТЫ --- */
         .info-icon {
             cursor: help;
             position: relative;
@@ -279,8 +354,21 @@
 </head>
 <body>
 
+    <!-- ВСПЛЫВАЮЩЕЕ ОКНО (МЕНЮ) -->
+    <div class="modal-overlay" id="menuModal" onclick="closeMenu(event)">
+        <div class="modal-window">
+            <span class="close-btn" onclick="closeMenu(event)">&times;</span>
+            <h2 style="margin-bottom: 30px;">Эксклюзив</h2>
+            <!-- КНОПКА КУПИТЬ СТРУЮ -->
+            <button class="buy-struya-btn" onclick="alert('Функция покупки скоро будет доступна!')">
+                Купить струю
+            </button>
+        </div>
+    </div>
+
     <header>
-        <div class="header-left">
+        <!-- Добавили onclick="openMenu()" -->
+        <div class="header-left" onclick="openMenu()">
             <span>☰ Menu</span>
         </div>
         <div class="logo">♛</div>
@@ -305,92 +393,72 @@
     </nav>
 
     <div class="grid-container" id="productsGrid">
-
         <div id="empty-msg">В Gay Edition пока пусто... <br>Лайкни банку!</div>
 
         <!-- ТОВАР 1 -->
         <div class="card" id="card1">
             <div class="heart-icon" onclick="toggleLike(this, 'card1')">♡</div>
-            <div class="img-wrapper">
-                <img src="jar.png" alt="Банка">
-            </div>
+            <div class="img-wrapper"><img src="jar.png" alt="Банка"></div>
             <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
             <div class="card-title">1 man 12 cucumber</div>
             <div class="card-desc">Oyster, 40 mm, Oystersteel and fresh cucumbers</div>
-            <div class="card-price">
-                2 строи мочи 
-                <span class="info-icon">ⓘ
-                    <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
-                </span>
-            </div>
+            <div class="card-price">2 строи мочи <span class="info-icon">ⓘ<span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span></span></div>
             <div class="new-tag">New model</div>
         </div>
 
         <!-- ТОВАР 2 -->
         <div class="card" id="card2">
             <div class="heart-icon" onclick="toggleLike(this, 'card2')">♡</div>
-            <div class="img-wrapper">
-                <img src="jar.png" alt="Банка">
-            </div>
+            <div class="img-wrapper"><img src="jar.png" alt="Банка"></div>
             <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
             <div class="card-title">1 gay 12 cucumber</div>
             <div class="card-desc">Oyster, 40 mm, Everose gold Secret ingredient</div>
-            <div class="card-price">
-                7 строев мочи 
-                <span class="info-icon">ⓘ
-                    <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
-                </span>
-            </div>
+            <div class="card-price">7 строев мочи <span class="info-icon">ⓘ<span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span></span></div>
         </div>
 
         <!-- ТОВАР 3 -->
         <div class="card" id="card3">
             <div class="heart-icon" onclick="toggleLike(this, 'card3')">♡</div>
-            <div class="img-wrapper">
-                <img src="jar.png" alt="Банка">
-            </div>
+            <div class="img-wrapper"><img src="jar.png" alt="Банка"></div>
             <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
             <div class="card-title">По приколу еблана вставили</div>
             <div class="card-desc">Oyster, 42 mm, Oystersteel Limited edition</div>
-            <div class="card-price">
-                1 строя мочи 
-                <span class="info-icon">ⓘ
-                    <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
-                </span>
-            </div>
+            <div class="card-price">1 строя мочи <span class="info-icon">ⓘ<span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span></span></div>
             <div class="new-tag">New model</div>
         </div>
         
         <!-- ТОВАР 4 -->
         <div class="card" id="card4">
             <div class="heart-icon" onclick="toggleLike(this, 'card4')">♡</div>
-            <div class="img-wrapper">
-                <img src="jar.png" alt="Банка">
-            </div>
+            <div class="img-wrapper"><img src="jar.png" alt="Банка"></div>
             <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
             <div class="card-title">37 см в очке</div>
             <div class="card-desc">Oyster, 41 mm, Painsteel Waterproof jar</div>
-            <div class="card-price">
-                5 строев мочи 
-                <span class="info-icon">ⓘ
-                    <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
-                </span>
-            </div>
+            <div class="card-price">5 строев мочи <span class="info-icon">ⓘ<span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span></span></div>
         </div>
-
     </div>
 
     <script>
-        // --- ЛОГИКА СОХРАНЕНИЯ (Local Storage) ---
-        
-        // 1. При загрузке страницы пытаемся достать сохраненные лайки
+        // --- ФУНКЦИИ ДЛЯ МЕНЮ ---
+        function openMenu() {
+            const modal = document.getElementById('menuModal');
+            modal.classList.add('active');
+        }
+
+        function closeMenu(event) {
+            // Закрываем, если кликнули по затемненному фону или по крестику
+            // Проверяем, чтобы клик был именно по фону (id="menuModal") или по крестику (class="close-btn")
+            if (event.target.id === 'menuModal' || event.target.classList.contains('close-btn')) {
+                const modal = document.getElementById('menuModal');
+                modal.classList.remove('active');
+            }
+        }
+
+        // --- ЛОГИКА СОХРАНЕНИЯ ---
         let savedData = localStorage.getItem('petrikFavorites');
-        // Если данных нет, создаем пустой массив. Если есть - читаем его.
         let likedItems = savedData ? JSON.parse(savedData) : [];
-        
         let currentMode = 'all'; 
 
-        // 2. Функция восстановления сердечек при загрузке
         function restoreLikes() {
             likedItems.forEach(id => {
                 const card = document.getElementById(id);
@@ -402,34 +470,25 @@
             });
         }
 
-        // Запускаем восстановление сразу
         restoreLikes();
-
-        // --- ОСНОВНЫЕ ФУНКЦИИ ---
 
         function toggleLike(heartElement, cardId) {
             event.stopPropagation();
             const index = likedItems.indexOf(cardId);
 
             if (index === -1) {
-                // Добавляем лайк
                 likedItems.push(cardId);
                 heartElement.classList.add('liked');
                 heartElement.innerHTML = '♥';
             } else {
-                // Удаляем лайк
                 likedItems.splice(index, 1);
                 heartElement.classList.remove('liked');
                 heartElement.innerHTML = '♡';
-                
-                // Если мы в режиме избранного - скрываем карточку сразу
                 if (currentMode === 'favorites') {
                     document.getElementById(cardId).style.display = 'none';
                     checkEmpty();
                 }
             }
-
-            // 3. СОХРАНЯЕМ В ПАМЯТЬ БРАУЗЕРА ПОСЛЕ КАЖДОГО КЛИКА
             localStorage.setItem('petrikFavorites', JSON.stringify(likedItems));
         }
 
@@ -446,10 +505,8 @@
         function showFavorites(btn) {
             currentMode = 'favorites';
             updateNavStyles(btn);
-
             const cards = document.querySelectorAll('.card');
             let hasVisibleItems = false;
-
             cards.forEach(card => {
                 if (likedItems.includes(card.id)) {
                     card.style.display = 'flex';
@@ -458,7 +515,6 @@
                     card.style.display = 'none';
                 }
             });
-
             if (!hasVisibleItems) {
                 document.getElementById('empty-msg').style.display = 'block';
             } else {
