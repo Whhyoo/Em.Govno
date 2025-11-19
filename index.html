@@ -3,18 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Petrik: The Sirot Edition</title>
     
+    <!-- === НАСТРОЙКИ ДЛЯ ТЕЛЕГРАМА И СОЦСЕТЕЙ === -->
+    <title>Petrik: The Sirot Edition</title>
+    <meta name="description" content="Эксклюзивные банки с огурцами. All Sirots here.">
+
+    <!-- Open Graph (Основное для Telegram) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Petrik: The Sirot Edition">
+    <meta property="og:description" content="Эксклюзивная коллекция. All Sirots. Заходи и выбирай струю.">
+    <!-- ВАЖНО: Когда выложишь сайт, замени jar.png на полную ссылку (например https://mysite.com/jar.png) -->
+    <meta property="og:image" content="jar.png"> 
+
+    <!-- Twitter Card (для Твиттера) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Petrik: The Sirot Edition">
+    <meta name="twitter:description" content="Эксклюзивная коллекция. All Sirots. Заходи и выбирай струю.">
+    <meta name="twitter:image" content="jar.png">
+    <!-- =========================================== -->
+
     <!-- ИКОНКА САЙТА (FAVICON) -->
-    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="icon" href="jar.png" type="image/png">
 
     <style>
         /* --- БАЗОВЫЕ СТИЛИ --- */
         body {
             margin: 0;
-            min-height: 100vh; /* Растягиваем на весь экран */
-            background: linear-gradient(to bottom, #151515, #050505); /* Монотонный градиент */
-            background-attachment: fixed; /* Фон зафиксирован */
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #151515, #050505);
+            background-attachment: fixed;
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             overflow-x: hidden; 
@@ -45,7 +62,6 @@
             transition: color 0.3s;
         }
 
-        /* Правая часть хедера пустая, как и просили */
         .header-right {
             display: flex;
         }
@@ -166,7 +182,6 @@
             justify-content: center;
             gap: 30px;
             padding-bottom: 20px;
-            /* Линия снизу убрана */
             margin-bottom: 50px;
         }
         .models-nav span {
@@ -180,7 +195,7 @@
         .models-nav span:hover { color: #aaa; }
         .models-nav span.active { 
             color: #006039; 
-            border-bottom: 2px solid #006039; /* Подчеркивание только у активного */
+            border-bottom: 2px solid #006039; 
         }
 
         .grid-container {
@@ -313,10 +328,8 @@
 </head>
 <body>
 
-    <!-- ЗАТЕМНЕНИЕ ФОНА -->
     <div class="sidebar-overlay" id="overlay" onclick="closeMenu()"></div>
 
-    <!-- БОКОВОЕ МЕНЮ -->
     <div class="sidebar-menu" id="sidebar">
         <span class="close-btn" onclick="closeMenu()">&times;</span>
         
@@ -326,19 +339,15 @@
         <a href="#" class="sidebar-link">Доставка</a>
         <a href="#" class="sidebar-link">Контакты</a>
 
-        <!-- КНОПКА -->
         <button class="buy-struya-btn" onclick="alert('Функция покупки скоро будет доступна!')">
             Купить струю
         </button>
     </div>
 
     <header>
-        <!-- Клик открывает меню -->
         <div class="header-left" onclick="openMenu()">
             <span>☰ Menu</span>
         </div>
-        
-        <!-- Пустой блок справа -->
         <div class="header-right"></div>
     </header>
 
@@ -401,7 +410,6 @@
     </div>
 
     <script>
-        // --- ЛОГИКА БОКОВОГО МЕНЮ ---
         function openMenu() {
             document.getElementById('sidebar').classList.add('active');
             document.getElementById('overlay').classList.add('active');
@@ -412,7 +420,6 @@
             document.getElementById('overlay').classList.remove('active');
         }
 
-        // --- ЛОГИКА СОХРАНЕНИЯ ЛАЙКОВ ---
         let savedData = localStorage.getItem('petrikFavorites');
         let likedItems = savedData ? JSON.parse(savedData) : [];
         let currentMode = 'all'; 
@@ -450,7 +457,6 @@
             localStorage.setItem('petrikFavorites', JSON.stringify(likedItems));
         }
 
-        // --- ЛОГИКА ФИЛЬТРАЦИИ ---
         function showAll(btn) {
             currentMode = 'all';
             updateNavStyles(btn);
