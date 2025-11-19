@@ -8,15 +8,14 @@
         /* --- БАЗОВЫЕ СТИЛИ --- */
         body {
             margin: 0;
-            background-color: #151515; /* Единый темный фон для всего */
+            background-color: #151515;
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             overflow-x: hidden;
         }
 
         header {
-            /* БЫЛ ЗЕЛЕНЫЙ, СТАЛ ПРОЗРАЧНЫЙ */
-            background-color: transparent; 
+            background-color: transparent;
             height: 70px;
             display: flex;
             align-items: center;
@@ -36,7 +35,7 @@
 
         .logo {
             font-size: 30px;
-            color: #a37e2c; /* Золотая корона */
+            color: #a37e2c;
         }
 
         .hero {
@@ -382,27 +381,56 @@
     </div>
 
     <script>
-        let likedItems = [];
+        // --- ЛОГИКА СОХРАНЕНИЯ (Local Storage) ---
+        
+        // 1. При загрузке страницы пытаемся достать сохраненные лайки
+        let savedData = localStorage.getItem('petrikFavorites');
+        // Если данных нет, создаем пустой массив. Если есть - читаем его.
+        let likedItems = savedData ? JSON.parse(savedData) : [];
+        
         let currentMode = 'all'; 
+
+        // 2. Функция восстановления сердечек при загрузке
+        function restoreLikes() {
+            likedItems.forEach(id => {
+                const card = document.getElementById(id);
+                if (card) {
+                    const heart = card.querySelector('.heart-icon');
+                    heart.classList.add('liked');
+                    heart.innerHTML = '♥';
+                }
+            });
+        }
+
+        // Запускаем восстановление сразу
+        restoreLikes();
+
+        // --- ОСНОВНЫЕ ФУНКЦИИ ---
 
         function toggleLike(heartElement, cardId) {
             event.stopPropagation();
             const index = likedItems.indexOf(cardId);
 
             if (index === -1) {
+                // Добавляем лайк
                 likedItems.push(cardId);
                 heartElement.classList.add('liked');
                 heartElement.innerHTML = '♥';
             } else {
+                // Удаляем лайк
                 likedItems.splice(index, 1);
                 heartElement.classList.remove('liked');
                 heartElement.innerHTML = '♡';
                 
+                // Если мы в режиме избранного - скрываем карточку сразу
                 if (currentMode === 'favorites') {
                     document.getElementById(cardId).style.display = 'none';
                     checkEmpty();
                 }
             }
+
+            // 3. СОХРАНЯЕМ В ПАМЯТЬ БРАУЗЕРА ПОСЛЕ КАЖДОГО КЛИКА
+            localStorage.setItem('petrikFavorites', JSON.stringify(likedItems));
         }
 
         function showAll(btn) {
