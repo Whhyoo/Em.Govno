@@ -5,13 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Petrik: The Sirot Edition</title>
     <style>
-        /* --- БАЗОВЫЕ СТИЛИ --- */
+        /* --- БАЗОВЫЕ СТИЛИ (ИСПРАВЛЕНО) --- */
         body {
             margin: 0;
-            background-color: #151515;
+            /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: */
+            min-height: 100vh; /* Растягиваем тело на всю высоту экрана */
+            
+            /* Легкий монотонный градиент (от #151515 к #050505) */
+            background: linear-gradient(to bottom, #151515, #050505);
+            
+            /* Фиксируем фон, чтобы он не двигался при скролле */
+            background-attachment: fixed; 
+            
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            overflow-x: hidden; /* Важно, чтобы меню не создавало горизонтальный скролл */
+            overflow-x: hidden; 
         }
 
         /* --- ХЕДЕР --- */
@@ -45,16 +53,14 @@
         }
 
         /* --- БОКОВОЕ МЕНЮ (SIDEBAR) --- */
-        
-        /* Фон-затемнение (подложка) */
         .sidebar-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный черный */
-            z-index: 1999; /* Чуть ниже самого меню */
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1999;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -65,31 +71,26 @@
             visibility: visible;
         }
 
-        /* Сама панель меню */
         .sidebar-menu {
             position: fixed;
             top: 0;
             left: 0;
-            width: 300px; /* Ширина меню (узкое) */
+            width: 300px;
             height: 100%;
-            background-color: #1a1a1a; /* Темно-серый фон меню */
-            border-right: 2px solid #006039; /* Зеленая линия справа */
-            z-index: 2000; /* Самый верхний слой */
+            background-color: #1a1a1a;
+            border-right: 2px solid #006039;
+            z-index: 2000;
             padding: 30px;
             box-sizing: border-box;
-            
-            /* Скрываем за левой границей экрана */
             transform: translateX(-100%); 
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Плавная анимация */
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 10px 0 30px rgba(0,0,0,0.5);
         }
 
-        /* Класс для открытия меню */
         .sidebar-menu.active {
-            transform: translateX(0); /* Возвращаем на экран */
+            transform: translateX(0);
         }
 
-        /* Кнопка закрытия (крестик) */
         .close-btn {
             position: absolute;
             top: 20px;
@@ -104,7 +105,6 @@
             color: white;
         }
 
-        /* Заголовок внутри меню */
         .sidebar-title {
             font-size: 24px;
             font-weight: bold;
@@ -115,7 +115,6 @@
             padding-bottom: 15px;
         }
 
-        /* Кнопка "Купить струю" */
         .buy-struya-btn {
             display: block;
             width: 100%;
@@ -137,7 +136,6 @@
             transform: scale(1.02);
         }
 
-        /* Дополнительные ссылки в меню (для красоты) */
         .sidebar-link {
             display: block;
             color: #aaa;
@@ -149,11 +147,10 @@
         }
         .sidebar-link:hover {
             color: #006039;
-            padding-left: 10px; /* Небольшой сдвиг при наведении */
+            padding-left: 10px;
         }
 
-
-        /* --- ОСТАЛЬНЫЕ СТИЛИ (Без изменений) --- */
+        /* --- ОСНОВНОЙ КОНТЕНТ --- */
         .hero {
             text-align: center;
             padding: 60px 0 40px;
@@ -171,6 +168,7 @@
             margin: 0;
             font-weight: bold;
         }
+
         .models-nav {
             display: flex;
             justify-content: center;
@@ -189,6 +187,7 @@
         }
         .models-nav span:hover { color: #aaa; }
         .models-nav span.active { color: #006039; border-bottom: 2px solid #006039; }
+
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -196,8 +195,10 @@
             padding: 0 5vw;
             max-width: 1600px;
             margin: 0 auto 100px;
-            min-height: 400px;
+            /* min-height можно оставить, но body.min-height важнее */
+            min-height: 400px; 
         }
+
         .card {
             background-color: transparent;
             padding: 20px;
@@ -209,6 +210,8 @@
             cursor: pointer;
             transition: all 0.5s ease;
         }
+
+        /* Эффект фокуса на карточке */
         .grid-container:has(.card:hover) .card {
             filter: blur(5px) brightness(0.5);
             transform: scale(0.95);
@@ -218,6 +221,7 @@
             transform: scale(1.1) !important;
             z-index: 10;
         }
+
         .heart-icon {
             position: absolute;
             top: 20px;
@@ -231,6 +235,7 @@
         }
         .heart-icon:hover { transform: scale(1.2); }
         .heart-icon.liked { color: #006039; -webkit-text-stroke: 0; }
+
         .img-wrapper {
             height: 350px;
             width: 100%;
@@ -245,6 +250,7 @@
             object-fit: contain;
             transition: transform 0.6s ease;
         }
+
         .hidden-desc {
             position: absolute;
             top: 30%;
@@ -269,11 +275,15 @@
             visibility: visible;
             transform: translateY(0);
         }
+
         .card-title { font-size: 18px; font-weight: bold; margin-bottom: 8px; width: 100%; }
         .card-desc { font-size: 14px; color: #aaa; margin-bottom: 15px; line-height: 1.4; width: 100%; }
         .card-price { font-size: 14px; font-weight: bold; width: 100%; color: #fff; display: flex; align-items: center; gap: 5px; }
         .new-tag { margin-top: 20px; font-size: 12px; font-weight: bold; color: #fff; width: 100%; }
+        
         #empty-msg { display: none; text-align: center; width: 100%; font-size: 24px; color: #555; grid-column: 1 / -1; }
+        
+        /* Тултип */
         .info-icon { cursor: help; position: relative; font-size: 16px; }
         .currency-tooltip {
             position: absolute;
