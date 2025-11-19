@@ -8,14 +8,15 @@
         /* --- БАЗОВЫЕ СТИЛИ --- */
         body {
             margin: 0;
-            background-color: #151515;
+            background-color: #151515; /* Единый темный фон для всего */
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             overflow-x: hidden;
         }
 
         header {
-            background-color: #006039;
+            /* БЫЛ ЗЕЛЕНЫЙ, СТАЛ ПРОЗРАЧНЫЙ */
+            background-color: transparent; 
             height: 70px;
             display: flex;
             align-items: center;
@@ -35,7 +36,7 @@
 
         .logo {
             font-size: 30px;
-            color: #a37e2c;
+            color: #a37e2c; /* Золотая корона */
         }
 
         .hero {
@@ -110,13 +111,11 @@
             transition: all 0.5s ease;
         }
 
-        /* Если внутри сетки есть наведенная карточка, блюрим остальные */
         .grid-container:has(.card:hover) .card {
             filter: blur(5px) brightness(0.5);
             transform: scale(0.95);
         }
 
-        /* Сама активная карточка */
         .card:hover {
             filter: blur(0) brightness(1) !important;
             transform: scale(1.1) !important;
@@ -161,7 +160,7 @@
             transition: transform 0.6s ease;
         }
 
-        /* --- ОПИСАНИЕ БАНКИ (Всплывающее) --- */
+        /* --- ОПИСАНИЕ БАНКИ --- */
         .hidden-desc {
             position: absolute;
             top: 30%;
@@ -189,7 +188,7 @@
             transform: translateY(0);
         }
 
-        /* --- ТЕКСТЫ КАРТОЧКИ --- */
+        /* --- ТЕКСТЫ --- */
         .card-title {
             font-size: 18px;
             font-weight: bold;
@@ -210,7 +209,7 @@
             font-weight: bold;
             width: 100%;
             color: #fff;
-            display: flex; /* Чтобы выровнять иконку */
+            display: flex;
             align-items: center;
             gap: 5px;
         }
@@ -232,19 +231,18 @@
             grid-column: 1 / -1;
         }
 
-        /* --- ИНФО ИКОНКА (i) --- */
+        /* --- ПОДСКАЗКА ВАЛЮТЫ --- */
         .info-icon {
             cursor: help;
-            position: relative; /* Чтобы подсказка позиционировалась относительно иконки */
+            position: relative;
             font-size: 16px;
         }
 
-        /* --- ПОДСКАЗКА ДЛЯ ВАЛЮТЫ --- */
         .currency-tooltip {
             position: absolute;
-            bottom: 140%; /* Появляется над иконкой */
+            bottom: 140%;
             left: 50%;
-            transform: translateX(-50%); /* Центрирование */
+            transform: translateX(-50%);
             width: 200px;
             background-color: #222;
             color: #fff;
@@ -256,15 +254,12 @@
             line-height: 1.4;
             border: 1px solid #444;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            
-            /* Скрыто по умолчанию */
             visibility: hidden;
             opacity: 0;
             transition: opacity 0.3s;
-            z-index: 100; /* Поверх всего */
+            z-index: 100;
         }
 
-        /* Стрелочка вниз у подсказки */
         .currency-tooltip::after {
             content: "";
             position: absolute;
@@ -276,7 +271,6 @@
             border-color: #222 transparent transparent transparent;
         }
 
-        /* Показываем при наведении на иконку */
         .info-icon:hover .currency-tooltip {
             visibility: visible;
             opacity: 1;
@@ -324,15 +318,12 @@
             <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
             <div class="card-title">1 man 12 cucumber</div>
             <div class="card-desc">Oyster, 40 mm, Oystersteel and fresh cucumbers</div>
-            
-            <!-- ЦЕНА + ПОДСКАЗКА -->
             <div class="card-price">
                 2 строи мочи 
                 <span class="info-icon">ⓘ
                     <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
                 </span>
             </div>
-            
             <div class="new-tag">New model</div>
         </div>
 
@@ -345,7 +336,6 @@
             <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
             <div class="card-title">1 gay 12 cucumber</div>
             <div class="card-desc">Oyster, 40 mm, Everose gold Secret ingredient</div>
-            
             <div class="card-price">
                 7 строев мочи 
                 <span class="info-icon">ⓘ
@@ -363,14 +353,12 @@
             <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
             <div class="card-title">По приколу еблана вставили</div>
             <div class="card-desc">Oyster, 42 mm, Oystersteel Limited edition</div>
-            
             <div class="card-price">
                 1 строя мочи 
                 <span class="info-icon">ⓘ
                     <span class="currency-tooltip">Струя - валюта сайта, за которую можно приобретать разного вида товар. 1 струя - 13 рублей</span>
                 </span>
             </div>
-            
             <div class="new-tag">New model</div>
         </div>
         
@@ -383,7 +371,6 @@
             <div class="hidden-desc">Просто еблан сидит в банке огурцов</div>
             <div class="card-title">37 см в очке</div>
             <div class="card-desc">Oyster, 41 mm, Painsteel Waterproof jar</div>
-            
             <div class="card-price">
                 5 строев мочи 
                 <span class="info-icon">ⓘ
