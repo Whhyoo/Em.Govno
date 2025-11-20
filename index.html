@@ -260,19 +260,17 @@
             transition: transform 0.6s ease;
         }
 
-        /* === НОВАЯ АНИМАЦИЯ ЗУМА === */
-        /* Определяем анимацию "дыхания" */
+        /* === НОВАЯ АНИМАЦИЯ ЗУМА (Исправленная) === */
         @keyframes smoothZoom {
             0% { transform: scale(1); }
-            50% { transform: scale(1.15); } /* На пике увеличивается сильнее */
+            50% { transform: scale(1.05); } /* Было 1.15, стало 1.05 — это мягче */
             100% { transform: scale(1); }
         }
 
-        /* Применяем анимацию к картинке ПРИ наведении на карточку */
         .card:hover img {
             animation: smoothZoom 3s infinite ease-in-out;
         }
-        /* =========================== */
+        /* ========================================= */
 
         .hidden-desc {
             position: absolute;
