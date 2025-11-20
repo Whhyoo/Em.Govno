@@ -4,25 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- === НАСТРОЙКИ ДЛЯ ТЕЛЕГРАМА И СОЦСЕТЕЙ === -->
     <title>Petrik: The Sirot Edition</title>
     <meta name="description" content="Эксклюзивные банки с огурцами. All Sirots here.">
 
-    <!-- Open Graph (Основное для Telegram) -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Petrik: The Sirot Edition">
     <meta property="og:description" content="Эксклюзивная коллекция. All Sirots. Заходи и выбирай струю.">
-    <!-- ВАЖНО: Когда выложишь сайт, замени jar.png на полную ссылку (например https://mysite.com/jar.png) -->
     <meta property="og:image" content="jar.png"> 
 
-    <!-- Twitter Card (для Твиттера) -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Petrik: The Sirot Edition">
     <meta name="twitter:description" content="Эксклюзивная коллекция. All Sirots. Заходи и выбирай струю.">
     <meta name="twitter:image" content="jar.png">
-    <!-- =========================================== -->
 
-    <!-- ИКОНКА САЙТА (FAVICON) -->
     <link rel="icon" href="jar.png" type="image/png">
 
     <style>
@@ -64,7 +60,41 @@
 
         .header-right {
             display: flex;
+            align-items: center;
         }
+
+        /* === НОВЫЙ СТИЛЬ ДЛЯ ВАЛЮТЫ === */
+        .currency-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Расстояние между картинкой и цифрой */
+            background-color: rgba(20, 20, 20, 0.8); /* Темный фон */
+            border: 1px solid #006039; /* Зеленая обводка */
+            padding: 6px 16px; /* Отступы внутри */
+            border-radius: 50px; /* Сильное закругление (овал) */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px); /* Эффект размытия фона под плашкой */
+            transition: transform 0.3s;
+        }
+
+        .currency-badge:hover {
+            transform: scale(1.05);
+            background-color: rgba(0, 96, 57, 0.2);
+        }
+
+        .currency-badge img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .currency-badge span {
+            font-weight: bold;
+            font-size: 15px;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        /* ============================== */
 
         /* --- БОКОВОЕ МЕНЮ (SIDEBAR) --- */
         .sidebar-overlay {
@@ -260,17 +290,16 @@
             transition: transform 0.6s ease;
         }
 
-        /* === НОВАЯ АНИМАЦИЯ ЗУМА (Исправленная) === */
+        /* Анимация плавного зума (исправленная, мягкая) */
         @keyframes smoothZoom {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); } /* Было 1.15, стало 1.05 — это мягче */
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
 
         .card:hover img {
             animation: smoothZoom 3s infinite ease-in-out;
         }
-        /* ========================================= */
 
         .hidden-desc {
             position: absolute;
@@ -361,7 +390,16 @@
         <div class="header-left" onclick="openMenu()">
             <span>☰ Menu</span>
         </div>
-        <div class="header-right"></div>
+        
+        <!-- === ВОТ ТУТ ИЗМЕНЕНИЯ: Окошко с валютой === -->
+        <div class="header-right">
+            <div class="currency-badge">
+                <!-- Использую ту же банку как иконку, но можешь заменить на каплю и т.д. -->
+                <img src="jar.png" alt="Coin"> 
+                <span id="user-balance">0 str.</span>
+            </div>
+        </div>
+        <!-- ========================================== -->
     </header>
 
     <section class="hero">
